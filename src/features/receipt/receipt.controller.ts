@@ -1,18 +1,29 @@
-import { Controller, Get, Post, Body, UploadedFile, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ReceiptService } from './receipt.service.js';
-import { CreateReceiptDto } from './dto/create-receipt.dto.js';
-import { UpdateReceiptDto } from './dto/update-receipt.dto.js';
+
 import { FileInterceptor } from '@nestjs/platform-express';
 import 'multer';
 
 @Controller('receipt')
 export class ReceiptController {
+  private readonly logger = new Logger(ReceiptController.name);
+
   constructor(private readonly receiptService: ReceiptService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file:  Express.Multer.File) {
-    return { fileName:file.originalname };
+  async analyseFile(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('No file uploaded');
+
+    return await this.receiptService.analyseReceipt(file.buffer, file.mimetype);
   }
 
   @Get()
