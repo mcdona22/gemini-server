@@ -2,6 +2,8 @@ import {
   BadRequestException,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Logger,
   Post,
   UploadedFile,
@@ -18,12 +20,26 @@ export class ReceiptController {
 
   constructor(private readonly receiptService: ReceiptService) {}
 
-  @Post()
+  @Post('analyse')
   @UseInterceptors(FileInterceptor('file'))
   async analyseFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('No file uploaded');
-
-    return await this.receiptService.analyseReceipt(file.buffer, file.mimetype);
+    try {
+      return await this.receiptService.analyseReceipt(
+        file.buffer,
+        file.mimetype,
+      );
+    } catch (error: unknown) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Receipt Analysis Failure',
+          message: (error as Error).message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get()
