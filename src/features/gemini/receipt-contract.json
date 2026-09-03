@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReceiptData",
+  "type": "object",
+  "properties": {
+    "merchantName": {
+      "type": "string",
+      "description": "Name of the restaurant or business."
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO currency symbol or code (e.g. GBP, £, USD, EUR)."
+    },
+    "subtotal": {
+      "type": "number",
+      "description": "Total before service charge or taxes, if printed."
+    },
+    "serviceCharge": {
+      "type": "number",
+      "description": "Explicit service charge or gratuity amount, if printed."
+    },
+    "totalAmount": {
+      "type": "number",
+      "description": "Total final bill amount."
+    },
+    "hasDiscrepancy": {
+      "type": "boolean",
+      "description": "One or more items could not be resolved or the total doesnt match the items total."
+    },
+    "discrepancyDescription": {
+      "type": "string",
+      "description": "Description of any discrepancies encountered."
+    },
+    "items": {
+      "type": "array",
+      "description": "Line items on the receipt.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Description of item."
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantity ordered."
+          },
+          "price": {
+            "type": "number",
+            "description": "Total price for this line item."
+          },
+          "hasDiscrepancy": {
+            "type": "boolean",
+            "description": "One or more attributes could not be resolved accurately."
+          }
+        },
+        "required": [
+          "name",
+          "price",
+          "quantity",
+          "hasDiscrepancy"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "merchantName",
+    "totalAmount",
+    "items",
+    "serviceCharge",
+    "hasDiscrepancy",
+    "discrepancyDescription"
+  ],
+  "additionalProperties": false
+}
