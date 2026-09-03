@@ -1,9 +1,17 @@
-import { Injectable, Logger, RequestTimeoutException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  RequestTimeoutException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
 import { ConfigService } from '@nestjs/config';
 import { processReceiptForOcr } from './impage-proceesing-util.js';
 import { RECEIPT_PROMPT } from './receipt.prompt.js';
-import { receiptResponseSchema } from './receipt.schema.js';
+import {
+  receiptResponseSchema,
+  validateReceiptContract,
+} from './receipt.schema.js';
 
 @Injectable()
 export class GeminiService {
@@ -50,7 +58,20 @@ export class GeminiService {
       if (!response.text) {
         throw new Error('Empty response received from backend service');
       }
+
       const receiptDto = JSON.parse(response.text);
+
+      this.logger.debug(`Checking the payload against the schema`);
+      const isValid: boolean = validateReceiptContract(receiptDto);
+
+      if (!isValid) {
+        this.logger.warn('Failed validation for schema');
+        this.logger.warn(validateReceiptContract.errors);
+        throw new UnprocessableEntityException({
+          message: 'Response payload failed contract validation',
+          errors: validateReceiptContract.errors,
+        });
+      }
       this.logger.debug('Analysis successfully completed');
       return receiptDto;
     } catch (error: unknown) {
