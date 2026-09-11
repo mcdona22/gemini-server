@@ -37,7 +37,7 @@ export class ReceiptController {
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ schema: receiptContract as any })
   @UseInterceptors(FileInterceptor('file'))
-  async analyseFile(@UploadedFile() file: Express.Multer.File) {
+  async analyseFile(@UploadedFile() file: any) {
     if (!file) throw new BadRequestException('No file uploaded');
     try {
       return await this.receiptService.analyseReceipt(
