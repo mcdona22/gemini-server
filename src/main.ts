@@ -11,10 +11,16 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .build();
+  app.enableCors({
+    origin: true,
+    methods: ['GET', 'POST', 'HEAD'],
+    credentials: true,
+    allowedHeaders: ['content-type', 'Authorization', 'Accept'],
+  });
   app.setGlobalPrefix('api/v1');
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 
 await bootstrap();
