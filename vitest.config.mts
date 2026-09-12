@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitest/config';
 import swc from 'unplugin-swc';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'node:path';
 
 export default defineConfig({
@@ -16,8 +15,6 @@ export default defineConfig({
   },
 
   plugins: [
-    tsconfigPaths(),
-
     swc.vite(
       {
         jsc: {
@@ -52,7 +49,7 @@ export default defineConfig({
     passWithNoTests: true,
     clearMocks: true,
     root: './',
-    include: ['**/*.spec.ts', 'test/**/*.e2e-spec.ts'],
+    include: ['src/**/*.spec.ts', 'test/**/*.e2e-spec.ts'],
     reporters: ['verbose'],
     testTimeout: 120000,
     deps: {

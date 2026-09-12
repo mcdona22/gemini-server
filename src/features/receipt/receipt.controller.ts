@@ -21,6 +21,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('Receipts')
 @Controller('receipt')
@@ -30,16 +31,18 @@ export class ReceiptController {
 
   constructor(private readonly receiptService: ReceiptService) {}
 
-  @Post('analyse')
   @ApiOperation({
     summary: 'Convert an image of a receipt to a structured JSON document',
   })
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ schema: receiptContract as any })
   @UseInterceptors(FileInterceptor('file'))
+  @Post('analyse')
+  @Throttle({ short: { ttl: 1000, limit: 3 } })
   async analyseFile(@UploadedFile() file: any) {
     if (!file) throw new BadRequestException('No file uploaded');
     try {
+      this.logger.debug('Submitting file for analysis', file.name);
       return await this.receiptService.analyseReceipt(
         file.buffer,
         file.mimetype,
