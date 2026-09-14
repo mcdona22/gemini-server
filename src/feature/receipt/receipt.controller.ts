@@ -1,10 +1,21 @@
-import { Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  UploadedFile,
+  UseGuards,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { CustomThrottlerGuard } from '../../guards/custom-throttler.guard.js';
+import { ReceiptService } from './receipt.service.js';
 
 @Controller('receipt')
 export class ReceiptController {
   logger = new Logger(ReceiptController.name);
+
+  constructor(private readonly receiptService: ReceiptService) {}
 
   // @SkipThrottle()
   @Get()
@@ -21,5 +32,14 @@ export class ReceiptController {
     const data = { message: 'POST RECEIVED' };
     this.logger.debug(data);
     return data;
+  }
+
+  async analyseFile(@UploadedFile() file: any) {
+    if (!file) throw new BadRequestException('No file uploaded');
+    try {
+      this.logger.debug('Submitting file for analysis', file.name);
+
+      return await this.receiptService.analyseFile(file.buffer, file.mimetype);
+    } catch (error) {}
   }
 }

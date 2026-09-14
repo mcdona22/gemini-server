@@ -3,6 +3,8 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ReceiptController } from './feature/receipt/receipt.controller.js';
+import { ReceiptService } from './feature/receipt/receipt.service.js';
+import { GeminiService } from './feature/gemini/gemini.service.js';
 
 @Module({
   imports: [
@@ -14,6 +16,6 @@ import { ReceiptController } from './feature/receipt/receipt.controller.js';
     ]),
   ],
   controllers: [AppController, ReceiptController],
-  providers: [AppService],
+  providers: [AppService, ReceiptService, GeminiService],
 })
 export class AppModule {}
