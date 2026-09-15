@@ -3,7 +3,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module.js';
 import { Server } from 'http';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
 describe('Throttling behaviour (e2e)', () => {
   const endPoint = 'api/v1';
@@ -12,13 +12,17 @@ describe('Throttling behaviour (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule,
-        await ConfigModule.forRoot({
-          isGlobal: true, // Ensures ConfigService is available across all feature modules
-        }),
-      ],
-    }).compile();
+      imports: [AppModule],
+    })
+      .overrideProvider(ConfigService)
+      .useValue({
+        getOrThrow: (key: string) => {
+          if (key === 'GEMINI_API_KEY') return 'mock-e2e-gemini-key';
+          throw new Error(`Unmocked key requested: ${key}`);
+        },
+        get: (key: string) => '30000',
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix(endPoint);
