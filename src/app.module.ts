@@ -5,7 +5,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ReceiptController } from './feature/receipt/receipt.controller.js';
 import { ReceiptService } from './feature/receipt/receipt.service.js';
 import { GeminiService } from './feature/gemini/gemini.service.js';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GoogleGenAI } from '@google/genai';
+
+export const GEMINI_CLIENT = 'GEMINI_CLIENT';
 
 @Module({
   imports: [
@@ -21,6 +24,18 @@ import { ConfigModule } from '@nestjs/config';
     ]),
   ],
   controllers: [AppController, ReceiptController],
-  providers: [AppService, ReceiptService, GeminiService],
+  providers: [
+    AppService,
+    ReceiptService,
+    GeminiService,
+    {
+      provide: GEMINI_CLIENT,
+      useFactory: (configService: ConfigService) => {
+        const apiKey = configService.getOrThrow<string>('GEMINI_API_KEY');
+        return new GoogleGenAI({ apiKey });
+      },
+      inject: [ConfigService],
+    },
+  ],
 })
 export class AppModule {}

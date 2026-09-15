@@ -1,29 +1,32 @@
 import {
+  Inject,
   Injectable,
   Logger,
   RequestTimeoutException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
-import { ConfigService } from '@nestjs/config';
 import { processReceiptForOcr } from './image-processing-util.js';
 import {
   receiptResponseSchema,
   validateReceiptContract,
 } from './receipt.schema.js';
 import { RECEIPT_PROMPT } from './receipt.prompt.js';
+import { GEMINI_CLIENT } from '../../app.module.js';
 
 @Injectable()
 export class GeminiService {
   private readonly logger = new Logger(GeminiService.name);
-  private readonly ai: GoogleGenAI;
+  // private readonly ai: GoogleGenAI;
   private readonly modelVersion = 'gemini-3.6-flash'; // Updated model target
   private readonly requestTimeoutMs = 30000;
 
-  constructor(private configService: ConfigService) {
-    const apiKey = this.configService.getOrThrow<string>('GEMINI_API_KEY');
-    this.ai = new GoogleGenAI({ apiKey });
-  }
+  // constructor(private configService: ConfigService) {
+  //   const apiKey = this.configService.getOrThrow<string>('GEMINI_API_KEY');
+  //   this.ai = new GoogleGenAI({ apiKey });
+  // }
+
+  constructor(@Inject('GEMINI_CLIENT') private readonly ai: GoogleGenAI) {}
 
   async analyseReceipt(fileBuffer: Buffer, mimeType = 'image/jpeg') {
     this.logger.debug('Processing image for OCR optimization...');
