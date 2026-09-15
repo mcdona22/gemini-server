@@ -3,6 +3,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module.js';
 import { Server } from 'http';
+import { ConfigModule } from '@nestjs/config';
 
 describe('Throttling behaviour (e2e)', () => {
   const endPoint = 'api/v1';
@@ -11,7 +12,12 @@ describe('Throttling behaviour (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        AppModule,
+        await ConfigModule.forRoot({
+          isGlobal: true, // Ensures ConfigService is available across all feature modules
+        }),
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
