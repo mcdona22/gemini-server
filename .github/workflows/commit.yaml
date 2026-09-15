@@ -2,6 +2,7 @@ name: Commit Tests
 on: [ push ]
 jobs:
   drive:
+    name: Fast commit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
