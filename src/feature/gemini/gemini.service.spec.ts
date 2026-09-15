@@ -25,4 +25,6 @@ describe('GeminiService', () => {
   it('The service should be constructed properly', () => {
     expect(service).toBeDefined();
   });
+
+  it('should respond to 503 wrapping the original cause');
 });

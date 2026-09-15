@@ -22,14 +22,10 @@ export class GeminiService {
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.getOrThrow<string>('GEMINI_API_KEY');
-    const timeOut = this.configService.get<string>('GEMINI_TIME_OUT');
     this.ai = new GoogleGenAI({ apiKey });
   }
 
-  async analyseReceipt(
-    fileBuffer: Buffer,
-    mimeType = 'image/jpeg',
-  ): Promise<Record<string, any>> {
+  async analyseReceipt(fileBuffer: Buffer, mimeType = 'image/jpeg') {
     this.logger.debug('Processing image for OCR optimization...');
     const processedBuffer = await processReceiptForOcr(fileBuffer);
     this.logger.debug(
