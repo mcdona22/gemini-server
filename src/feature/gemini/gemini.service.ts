@@ -17,7 +17,6 @@ import { GEMINI_CLIENT } from '../../app.module.js';
 @Injectable()
 export class GeminiService {
   private readonly logger = new Logger(GeminiService.name);
-  // private readonly ai: GoogleGenAI;
   private readonly modelVersion = 'gemini-3.6-flash'; // Updated model target
   private readonly requestTimeoutMs = 30000;
 
