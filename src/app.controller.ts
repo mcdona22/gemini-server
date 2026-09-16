@@ -1,13 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service.js';
+import { CustomThrottlerGuard } from './guards/custom-throttler.guard.js';
+import { Throttle } from '@nestjs/throttler';
 
-// @SkipThrottle()
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @UseGuards(CustomThrottlerGuard)
+  @Throttle({ default: { limit: 3, ttl: 10000 } })
   @Get()
-  getHello(): string {
+  getHello() {
     return this.appService.getHello();
   }
 }
