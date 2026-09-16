@@ -38,11 +38,8 @@ describe('Throttling behaviour (e2e)', () => {
 
   describe('Root endpoint', () => {
     const rootEndPoint = `/${endPoint}`;
-    it('/ (GET) - response quality', () => {
-      return request(httpServer)
-        .get(rootEndPoint)
-        .expect(HttpStatus.OK)
-        .expect('Hello World!');
+    it('options on app root url', () => {
+      return request(httpServer).options(rootEndPoint).expect(HttpStatus.OK);
     });
 
     describe('Receipt endpoint', () => {

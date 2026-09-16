@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Options, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service.js';
 import { CustomThrottlerGuard } from './guards/custom-throttler.guard.js';
 import { Throttle } from '@nestjs/throttler';
@@ -9,7 +9,7 @@ export class AppController {
 
   @UseGuards(CustomThrottlerGuard)
   @Throttle({ default: { limit: 3, ttl: 10000 } })
-  @Get()
+  @Options()
   getHello() {
     return this.appService.getHello();
   }

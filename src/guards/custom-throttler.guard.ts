@@ -15,8 +15,8 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     throw new HttpException(
       {
         status: HttpStatus.TOO_MANY_REQUESTS,
-        error: 'JRM says too many requests',
-        message: 'Rate limit exceeeded - try again later',
+        error: 'Too many requests',
+        message: 'Rate limit exceeded - try again later',
         ttl: throttleLimitDetail.ttl,
       },
       HttpStatus.TOO_MANY_REQUESTS,
