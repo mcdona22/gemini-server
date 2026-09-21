@@ -1,27 +1,37 @@
 import {
   ExecutionContext,
+  HttpException,
   HttpStatus,
-  Injectable,
   Logger,
 } from '@nestjs/common';
-import { ThrottlerException, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
-@Injectable()
+// @Injectable()
 export class CustomThrottlerGuard extends ThrottlerGuard {
+  override async canActivate(context: ExecutionContext): Promise<boolean> {
+    // MUST return the result of super.canActivate(context)
+    return super.canActivate(context);
+  }
+
   protected async throwThrottlingException(
     context: ExecutionContext,
     throttlerLimitDetail: any,
   ): Promise<void> {
     const logger = new Logger('CustomThrottlerGuard');
-    const response = context.switchToHttp().getResponse();
+    logger.warn(
+      `Rate limit triggered for path: ${context.switchToHttp().getRequest().url}`,
+    );
 
-    response.status(HttpStatus.TOO_MANY_REQUESTS).json({
-      status: HttpStatus.TOO_MANY_REQUESTS,
-      error: 'Too many request',
-      message: 'Rate limit exceeded.  Please wait before retrying',
-      ttl: throttlerLimitDetail.ttl,
-    });
-
-    throw new ThrottlerException('Rate limit exceeded');
+    // Throwing ThrottlerException allows @nestjs/throttler to set headers
+    // and lets NestJS handle the 429 response structure properly.
+    throw new HttpException(
+      {
+        message: 'Rate limit exceeded. Please wait before retrying',
+        error: 'Too many requests',
+        status: HttpStatus.TOO_MANY_REQUESTS,
+        ttl: throttlerLimitDetail.ttl,
+      },
+      HttpStatus.TOO_MANY_REQUESTS,
+    );
   }
 }

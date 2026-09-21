@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
 import { ConfigService } from '@nestjs/config';
-import { processReceiptForOcr } from './impage-proceesing-util.js';
 import { RECEIPT_PROMPT } from './receipt.prompt.js';
 import {
   receiptResponseSchema,
   validateReceiptContract,
 } from './receipt.schema.js';
+import { processReceiptForOcr } from './image-processing-util.js';
 
 @Injectable()
 export class GeminiService {

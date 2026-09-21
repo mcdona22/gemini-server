@@ -50,6 +50,7 @@ export default defineConfig({
     clearMocks: true,
     root: './',
     include: ['src/**/*.spec.ts', 'test/**/*.e2e-spec.ts'],
+    silent: false,
     reporters: ['verbose'],
     testTimeout: 120000,
     deps: {

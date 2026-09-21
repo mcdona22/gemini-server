@@ -1,5 +1,4 @@
 import { Controller, Get, Logger } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 
 @Controller()
 export class AppController {
@@ -7,7 +6,7 @@ export class AppController {
 
   constructor() {}
 
-  @Throttle({ short: { ttl: 10000, limit: 3 } })
+  // @Throttle({ short: { ttl: 10000, limit: 3 } })
   @Get()
   getHello() {
     this.logger.debug('saying hello');
