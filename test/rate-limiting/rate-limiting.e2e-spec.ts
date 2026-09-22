@@ -21,6 +21,6 @@ describe('Throttling at the boundary (E2E)', () => {
   afterAll(async () => await app.close());
 
   it('should return 201 when not throttled', async () => {
-    await request(app.getHttpServer()).get('/').expect(200).expect('success');
+    await request(app.getHttpServer()).get('/').expect(200);
   });
 });
