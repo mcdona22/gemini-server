@@ -3,6 +3,7 @@ import {
   Injectable,
   Logger,
   RequestTimeoutException,
+  ServiceUnavailableException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
@@ -79,9 +80,19 @@ export class GeminiService {
         this.logger.error('Receipt processing timed out');
         throw new RequestTimeoutException('Analysis took too long');
       }
+
+      if (error instanceof Error) {
+        const isBusy = error.message.includes('This model is currently exper');
+        this.logger.error('Overload', isBusy);
+        throw new ServiceUnavailableException(
+          'The service is experiencing heavy load',
+        );
+      }
+
       this.logger.error(
         `Receipt processing failed ${(error as Error).message}`,
       );
+
       throw error;
     }
   }

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Get,
+  Headers,
   HttpException,
   HttpStatus,
   Logger,
@@ -40,9 +41,13 @@ export class ReceiptController {
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(CustomThrottlerGuard)
   @Throttle({ default: { limit: 3, ttl: 10000 } }) // Explicitly protects POST /api/v1/receipt
-  async analyseFile(@UploadedFile() file: any) {
+  async analyseFile(
+    @UploadedFile() file: any,
+    @Headers() headers: Record<string, string>,
+  ) {
     if (!file) throw new BadRequestException('No file available');
     this.logger.debug('File received', file.originalname);
+    this.logger.debug('Headers', JSON.stringify(headers));
     try {
       this.logger.debug('Submitting file for analysis', file.originalname);
 
