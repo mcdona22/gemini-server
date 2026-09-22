@@ -4,7 +4,8 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   getInfo() {
     const version = '1.0.1';
-    const description = 'Explicit exceptions implemented';
-    return { version, description };
+    const description = 'New ai model';
+    const modelVersion = 'gemini-3.5-flash-lite';
+    return { version, description, modelVersion };
   }
 }

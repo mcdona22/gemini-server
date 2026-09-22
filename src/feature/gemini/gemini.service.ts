@@ -18,7 +18,7 @@ import { GEMINI_CLIENT } from '../../app.module.js';
 @Injectable()
 export class GeminiService {
   private readonly logger = new Logger(GeminiService.name);
-  private readonly modelVersion = 'gemini-3.6-flash'; // Updated model target
+  private readonly modelVersion = 'gemini-3.5-flash-lite'; // Updated model target
   private readonly requestTimeoutMs = 30000;
 
   // constructor(private configService: ConfigService) {
