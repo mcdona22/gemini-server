@@ -7,6 +7,7 @@ import { ReceiptService } from './feature/receipt/receipt.service.js';
 import { GeminiService } from './feature/gemini/gemini.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GoogleGenAI } from '@google/genai';
+import { MetaController } from './feature/meta/meta.controller.js';
 
 export const GEMINI_CLIENT = 'GEMINI_CLIENT';
 
@@ -23,7 +24,7 @@ export const GEMINI_CLIENT = 'GEMINI_CLIENT';
       },
     ]),
   ],
-  controllers: [AppController, ReceiptController],
+  controllers: [AppController, ReceiptController, MetaController],
   providers: [
     AppService,
     ReceiptService,
