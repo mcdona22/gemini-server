@@ -1,5 +1,10 @@
-export const RECEIPT_PROMPT = `
+export const getReceiptPrompt = (currentIsoDate: string) => `
 You are a high-precision OCR system. Extract receipt data strictly from visible printed text.
+
+DATE EXTRACTION DIRECTIVE:
+- Extract the transaction date from the receipt image.
+- Format the extracted date strictly as an ISO 8601 string (e.g., "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ssZ").
+- IF the date is unreadable, missing, truncated, or ambiguous, DEFAULT to this exact current timestamp: "${currentIsoDate}".
 
 MATHEMATICAL INTEGRITY & DISCREPANCY DIRECTIVES:
 - Prioritize VISUAL TRUTH over MATHEMATICAL RECONCILIATION.
