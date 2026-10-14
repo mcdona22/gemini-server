@@ -22,7 +22,7 @@ describe('AppController', () => {
   describe('root', () => {
     it('should return release info"', () => {
       const response = appController.simpleGet();
-      expect(response.version).toBe('1.0.1');
+      expect(response.version).toBe('1.0.2');
       expect(response.description).toBeTruthy();
     });
   });

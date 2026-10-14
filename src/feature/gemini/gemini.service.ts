@@ -12,8 +12,8 @@ import {
   receiptResponseSchema,
   validateReceiptContract,
 } from './receipt.schema.js';
-import { RECEIPT_PROMPT } from './receipt.prompt.js';
 import { GEMINI_CLIENT } from '../../app.module.js';
+import { getReceiptPrompt } from './receipt.prompt.js';
 
 @Injectable()
 export class GeminiService {
@@ -39,10 +39,12 @@ export class GeminiService {
     const timer = setTimeout(() => controller.abort(), this.requestTimeoutMs);
 
     try {
+      const nowIso = new Date().toISOString();
+      const prompt = getReceiptPrompt(nowIso);
       const response = await this.ai.models.generateContent({
         model: this.modelVersion,
         contents: [
-          RECEIPT_PROMPT,
+          prompt,
           {
             inlineData: {
               mimeType: mimeType,

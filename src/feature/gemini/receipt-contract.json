@@ -11,6 +11,11 @@
       "type": "string",
       "description": "ISO currency symbol or code (e.g. GBP, £, USD, EUR)."
     },
+
+    "receiptDate": {
+      "type": "string",
+      "description": "ISO 8601 formatted date extracted from receipt, or system fallback date if unreadable."
+    },
     "subtotal": {
       "type": "number",
       "description": "Total before service charge or taxes, if printed."
@@ -54,12 +59,7 @@
             "description": "One or more attributes could not be resolved accurately."
           }
         },
-        "required": [
-          "name",
-          "price",
-          "quantity",
-          "hasDiscrepancy"
-        ],
+        "required": ["name", "price", "quantity", "hasDiscrepancy"],
         "additionalProperties": false
       }
     }
@@ -67,6 +67,7 @@
   "required": [
     "merchantName",
     "totalAmount",
+    "receiptDate",
     "items",
     "serviceCharge",
     "hasDiscrepancy",
